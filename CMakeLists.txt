@@ -1,0 +1,43 @@
+cmake_minimum_required(VERSION 3.10.0)
+if (POLICY CMP0020)
+  cmake_policy (SET CMP0020 NEW)
+endif()
+
+if (POLICY CMP0043)
+  cmake_policy (SET CMP0043 NEW)
+endif()
+
+if (POLICY CMP0071)
+  cmake_policy (SET CMP0071 NEW)
+endif()
+if (POLICY CMP0053)
+  cmake_policy (SET CMP0053 NEW)
+endif()
+if (POLICY CMP0022)
+  cmake_policy (SET CMP0022 NEW)
+endif()
+project(occQt)
+ADD_DEFINITIONS(-DWNT)
+SET(projectName occQt)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+SET(CMAKE_PREFIX_PATH "$ENV{QTDIR}/lib/cmake")
+SET( CMAKE_AUTOMOC ON )
+FIND_PACKAGE(Qt5Widgets REQUIRED)
+FIND_PACKAGE(Qt5Gui REQUIRED)
+FIND_PACKAGE(Qt5Core REQUIRED)
+FIND_PACKAGE(Qt5OpenGL REQUIRED)
+find_package(OpenCasCade)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR}
+${OpenCASCADE_INCLUDE_DIR}
+) 
+
+
+file(GLOB src ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp )
+file(GLOB header ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+file(GLOB ui ${CMAKE_CURRENT_SOURCE_DIR}/*.ui)
+set(qrcFile ${CMAKE_CURRENT_SOURCE_DIR}/occqt.qrc)
+QT5_ADD_RESOURCES(QTRES ${qrcFile})
+qt5_wrap_ui(ui_header ${ui})
+add_executable(${projectName}  ${src} ${QTRES} ${header} ${ui})
+target_link_libraries(${projectName} ${OpenCASCADE_LIBRARIES} Qt5::Widgets Qt5::OpenGL Qt5::Gui Qt5::Core)
